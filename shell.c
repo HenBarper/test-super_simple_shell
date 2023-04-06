@@ -18,34 +18,47 @@ int main(void)
 	size_t size = 0;
 	char **words = NULL;
 	int count;
-	int CoP;
+	int CoP = 666;
 	int i = 0;
 
 	while (1)
 	{
-		printf("Entered while(1)\n");
+		printf("Entered while loop: %d\n", CoP);
 		printf("$ ");
 		getline(&command, &size, stdin);
 		printf("Command received: %s", command);
 		words = split_string(command, &count);
+
 		for (; i < count ; i++)
 		{
 			printf("token %d: %s\n", i, words[i]);
 		}
+
 		CoP = fork();
-		printf("Forked.\n");
-		if (CoP != 0)
+		printf("Forked by %d\n", CoP);
+
+		if (CoP == 0)
 		{
-			printf("Parent Waiting.\n");
-			wait(NULL);
+			printf("Child executing.\n");
+			if (execve(words[0], words, NULL) == -1)
+			{
+				perror("Error");
+				return (-1);
+			}
+			return (0);
 		}
 		else
 		{
-			printf("child executing\n");
-			if (execve(words[0], words, NULL) == -1)
-				perror("Error:");
+			printf("Parent waiting.\n");
+			wait(NULL);
+			printf("Parent awakend.\n");
 		}
+		printf("Just before end of while loop: %d\n", CoP);
 	}
+
+	printf("End of prog: %d\n", CoP);
+
+	//free(words);
 
 	return (0);
 }
