@@ -14,6 +14,9 @@ char** split_string(char *str, int *count);
  */
 int main(void)
 {
+	//char *argv[] = {"/bin/ls", "-l", "/usr", NULL};
+	//char stringy[] = "/bin/ls -l";
+	//char *argv[] = {"/bin/ls", NULL};
 	char *command = NULL;
 	size_t size = 0;
 	char **words = NULL;
@@ -40,7 +43,9 @@ int main(void)
 		if (CoP == 0)
 		{
 			printf("Child executing.\n");
+			//system(stringy);
 			if (execve(words[0], words, NULL) == -1)
+			//if (execve(argv[0], argv, NULL) == -1)
 			{
 				perror("Error");
 				return (-1);
@@ -57,6 +62,8 @@ int main(void)
 	}
 
 	printf("End of prog: %d\n", CoP);
+
+	//free(words);
 
 	return (0);
 }
